@@ -21,3 +21,6 @@ use any editor you want.
 Start editing this file with any editor you want. Any time
 you hit save, the browser will be updated with the latest
 markdown, previewed for your viewing.
+
+## Credits
+Themes liberally borrowed from: https://github.com/jasonm23/markdown-css-themes
