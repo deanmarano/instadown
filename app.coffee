@@ -5,23 +5,39 @@ app = express()
 socket = require 'socket.io'
 exec = require('child_process').exec
 
-filename = 'index.md'
+args = process.argv.slice(2)[0]
+if args?
+  filename = args
+else
+  filename = 'README.md'
+
 
 layout = fs.readFileSync('layout.html', 'utf-8')
 
 app.configure ->
   app.use(express.static(__dirname + '/public'))
+  app.use(express.favicon(__dirname + '/public/favicon.ico'))
 
-app.get '/index.md', (req, res)->
+app.get "/#{filename}", (req, res)->
   readAndConvert filename, (convertedText)->
-    page = layout.replace('{{body}}', convertedText)
-    res.setHeader('Content-Type', 'text/html')
-    res.setHeader('Content-Length', page.length)
-    res.end(page)
+    layout = layout.replace('{{filename}}', filename)
+    if convertedText?
+      page = layout.replace('{{body}}', convertedText)
+      res.setHeader('Content-Type', 'text/html')
+      res.setHeader('Content-Length', page.length)
+      res.end(page)
+    else
+      page = layout.replace('{{body}}', "File #{filename} not found.")
+      res.setHeader('Content-Type', 'text/html')
+      res.setHeader('Content-Length', page.length)
+      res.end(page)
 
 readAndConvert = (filename, callbackFn)->
   fs.readFile filename, 'utf-8', (err, body)->
-    callbackFn(md(body))
+    if err?
+      callbackFn(null)
+    else
+      callbackFn(md(body))
 
 server = app.listen(3000)
 
