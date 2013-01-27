@@ -5,14 +5,17 @@ app = express()
 socket = require 'socket.io'
 exec = require('child_process').exec
 
+PORT = 4000
+
 args = process.argv.slice(2)[0]
 if args?
   filename = args
 else
   filename = 'README.md'
 
-
 layout = fs.readFileSync('layout.html', 'utf-8')
+style = fs.readFileSync('public/markdown.css', 'utf-8')
+layout = layout.replace('{{style}}', style)
 
 app.configure ->
   app.use(express.static(__dirname + '/public'))
@@ -39,7 +42,7 @@ readAndConvert = (filename, callbackFn)->
     else
       callbackFn(md(body))
 
-server = app.listen(3000)
+server = app.listen(PORT)
 
 io = socket.listen(server)
 
@@ -48,5 +51,5 @@ fs.watchFile filename, (curr, prev)->
     io.sockets.emit 'body',
       newBody: newBody
 
-console.log('Listening on port 3000')
-exec "open http://localhost:3000/#{filename}"
+console.log("Listening on port #{PORT}")
+exec "open http://localhost:#{PORT}/#{filename}"
