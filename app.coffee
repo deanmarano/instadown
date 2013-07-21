@@ -1,20 +1,26 @@
 fs = require 'fs'
 md = require 'marked'
 express = require 'express'
-app = express()
+path = require 'path'
 socket = require 'socket.io'
 exec = require('child_process').exec
 
+app = express()
+appDir = __dirname
+
 PORT = 4000
 
-args = process.argv.slice(2)[0]
-if args?
-  filename = args
+filename = process.argv.slice(2)[0]
+filename = if filename?
+  path.join(process.cwd(), filename)
 else
-  filename = 'README.md'
+  path.join(appDir, 'README.md')
+console.log appDir
+console.log __dirname
+console.log filename
 
-layout = fs.readFileSync('layout.html', 'utf-8')
-style = fs.readFileSync('public/markdown.css', 'utf-8')
+layout = fs.readFileSync(path.join(appDir, 'layout.html'), 'utf-8')
+style = fs.readFileSync(path.join(appDir,'public/markdown.css'), 'utf-8')
 layout = layout.replace('{{style}}', style)
 
 app.configure ->
