@@ -8,6 +8,9 @@
       {{style}}
     </style>
 
+    <link href="//cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.css" rel="stylesheet" />
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io.connect('http://localhost');
@@ -15,6 +18,7 @@
       socket.on('body', function (resp) {
         var body = document.getElementsByTagName('body')[0];
         body.innerHTML = resp.newBody;
+        Prism.highlightAll();
       });
     </script>
   </head>

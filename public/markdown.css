@@ -107,3 +107,11 @@ td { vertical-align: top; }
   p, h2, h3 { orphans: 3; widows: 3; }
   h2, h3 { page-break-after: avoid; }
 }
+
+table, th, tr, td {
+  border: 1px solid #445b60;
+  text-align: center;
+}
+table {
+  width: 100%;
+}
